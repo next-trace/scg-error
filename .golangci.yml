@@ -1,0 +1,482 @@
+version: "2"
+run:
+  concurrency: 4
+  build-tags:
+    - integration
+  issues-exit-code: 1
+  tests: true
+output:
+  formats:
+    text:
+      path: stdout
+      print-linter-name: true
+      print-issued-lines: true
+linters:
+  enable:
+    - bodyclose
+    - copyloopvar
+    - cyclop
+    - depguard
+    - dogsled
+    - dupl
+    - errorlint
+    - forcetypeassert
+    - funlen
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - gomoddirectives
+    - gomodguard
+    - gosec
+    - grouper
+    - intrange
+    - lll
+    - loggercheck
+    - maintidx
+    - misspell
+    - nakedret
+    - nestif
+    - nilnil
+    - noctx
+    - nolintlint
+    - nosprintfhostport
+    - prealloc
+    - predeclared
+    - promlinter
+    - reassign
+    - revive
+    - rowserrcheck
+    - staticcheck
+    - testableexamples
+    - testpackage
+    - tparallel
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - usetesting
+    - wastedassign
+    - whitespace
+    - wrapcheck
+  disable:
+    - grouper
+    - unused
+    - misspell
+    - prealloc
+    - gocritic
+  settings:
+    cyclop:
+      max-complexity: 15
+    depguard:
+      rules:
+        cli:
+          files:
+            - '**/cmd/**'
+            - '!**/cmd/**/*_test.go'
+          allow:
+            - $gostd
+            - github.com/next-trace/scg-error
+            - github.com/next-trace/scg-error/error
+            - github.com/next-trace/scg-error/contract
+            - github.com/spf13/cobra
+            - github.com/spf13/viper
+            - github.com/fsnotify/fsnotify
+            - github.com/google/uuid
+        examples:
+          files:
+            - '**/examples/**'
+            - '**/example/**'
+          allow:
+            - $gostd
+            - github.com/next-trace/scg-error
+            - github.com/next-trace/scg-error/error
+            - github.com/next-trace/scg-error/contract
+            - github.com/spf13/viper
+            - github.com/fsnotify/fsnotify
+            - github.com/google/uuid
+        library:
+          files:
+            - '!**/*_test.go'
+            - '!**/cmd/**'
+            - '!**/examples/**'
+            - '!**/example/**'
+            - '!**/testing/**'
+          allow:
+            - $gostd
+            - github.com/next-trace/scg-error
+            - github.com/next-trace/scg-error/error
+            - github.com/next-trace/scg-error/contract
+            - github.com/spf13/viper
+            - github.com/fsnotify/fsnotify
+            - github.com/google/uuid
+        testing-utils:
+          files:
+            - '**/testing/**'
+            - '!**/testing/**/*_test.go'
+          allow:
+            - $gostd
+            - github.com/next-trace/scg-error
+            - github.com/next-trace/scg-error/error
+            - github.com/next-trace/scg-error/contract
+            - github.com/stretchr/testify/assert
+            - github.com/stretchr/testify/require
+            - github.com/stretchr/testify/suite
+            - github.com/stretchr/testify/mock
+            - github.com/spf13/viper
+            - github.com/fsnotify/fsnotify
+            - github.com/google/uuid
+        tests:
+          files:
+            - '**/*_test.go'
+          allow:
+            - $gostd
+            - github.com/next-trace/scg-error
+            - github.com/next-trace/scg-error/error
+            - github.com/next-trace/scg-error/contract
+            - github.com/stretchr/testify/assert
+            - github.com/stretchr/testify/require
+            - github.com/stretchr/testify/suite
+            - github.com/stretchr/testify/mock
+            - github.com/spf13/viper
+            - github.com/fsnotify/fsnotify
+            - github.com/google/uuid
+    dupl:
+      threshold: 200
+    errcheck:
+      check-type-assertions: true
+    errorlint:
+      errorf: true
+      asserts: true
+      comparison: true
+    funlen:
+      lines: 100
+      statements: 50
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+    gocritic:
+      disabled-checks:
+        - commentedOutCode
+        - whyNoLint
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+        - experimental
+    gocyclo:
+      min-complexity: 25
+    gomodguard:
+      blocked:
+        modules:
+          - github.com/golang/protobuf:
+              recommendations:
+                - google.golang.org/protobuf
+              reason: Use the new protobuf API
+        local-replace-directives: false
+    gosec:
+      includes:
+        - G101
+        - G102
+        - G104
+        - G106
+        - G107
+        - G201
+        - G202
+        - G203
+        - G204
+        - G301
+        - G302
+        - G303
+        - G304
+        - G305
+        - G306
+        - G307
+        - G401
+        - G402
+        - G403
+        - G404
+        - G501
+        - G502
+        - G503
+        - G504
+        - G505
+      severity: medium
+      confidence: medium
+      config:
+        G101:
+          ignore_entropy: false
+          pattern: (?i)((password|passwd|pwd|secret|token|apikey|api_key|access_key|auth_token)\s*[:=]\s*['"]([^'"]{8,}))
+        G102:
+          pattern: (?i)(['"](?:api|token|key|secret|pass|password)['"]:[ \t]*['"][^'"]+['"])
+      concurrency: 12
+    grouper:
+      const-require-single-const: false
+      const-require-grouping: true
+      import-require-single-import: false
+      import-require-grouping: true
+      type-require-single-type: false
+      type-require-grouping: true
+      var-require-single-var: false
+      var-require-grouping: true
+    lll:
+      line-length: 120
+    maintidx:
+      under: 20
+    misspell:
+      locale: US
+    nakedret:
+      max-func-lines: 30
+    nestif:
+      min-complexity: 5
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+      allow-unused: false
+    prealloc:
+      simple: true
+      range-loops: true
+      for-loops: true
+    revive:
+      max-open-files: 2048
+      confidence: 0.8
+      severity: warning
+      enable-all-rules: false
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: if-return
+        - name: increment-decrement
+        - name: var-naming
+        - name: var-declaration
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unused-parameter
+        - name: unreachable-code
+        - name: redefines-builtin-id
+    testpackage:
+      skip-regexp: (export|internal)_test\.go
+    unparam:
+      check-exported: false
+    unused:
+      field-writes-are-uses: false
+      post-statements-are-reads: true
+      exported-fields-are-used: false
+      parameters-are-used: false
+      local-variables-are-used: false
+      generated-is-used: false
+    wrapcheck:
+      ignore-sigs:
+        - .Errorf(
+        - errors.New(
+        - errors.Unwrap(
+        - .Wrap(
+        - .Wrapf(
+      ignore-package-globs:
+        - encoding/*
+        - github.com/pkg/errors
+        - github.com/next-trace/scg-database/contract
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - dupl
+          - errcheck
+          - funlen
+          - gochecknoinits
+          - goconst
+          - gocyclo
+          - gosec
+          - unparam
+        path: _test\.go
+      - linters:
+          - funlen
+          - gochecknoinits
+          - gocyclo
+        path: cmd/.*\.go
+      - linters:
+          - revive
+        path: (migration/migrator\.go|cmd/scg-db/migrate\.go)
+        text: 'blank-imports:'
+      - linters:
+          - revive
+          - staticcheck
+        source: _ "github\.com/golang-migrate/migrate/v4/database/
+      - linters:
+          - revive
+          - staticcheck
+        source: _ "github\.com/golang-migrate/migrate/v4/source/
+      - linters:
+          - lll
+        path: \\.pb\\.go
+      - linters:
+          - gosec
+        path: (config/.*|.*_test\.go)
+        text: 'G101: Potential hardcoded credentials'
+      - linters:
+          - nakedret
+        path: (adapter/.*|contract/.*)
+        text: naked return
+      - linters:
+          - revive
+        path: adapter/.*\.go
+        text: unused-parameter
+      - linters:
+          - revive
+        path: (internal/.*|testing/.*)
+        text: package-comments
+      - linters:
+          - gochecknoinits
+        path: adapter/.*/.*\.go
+        text: don't use init function
+      - linters:
+          - testpackage
+        path: (.*_internal_test\.go|.*_whitebox_test\.go)
+      - linters:
+          - testpackage
+        path: adapter/.*_test\.go
+      - linters:
+          - testpackage
+        path: (contract/.*_test\.go|db/.*_test\.go|config/.*_test\.go|migration/.*_test\.go|seeder/.*_test\.go|testing/.*_test\.go|utils/.*_test\.go)
+      - linters:
+          - staticcheck
+        text: ST1019.*is being imported more than once
+      - linters:
+          - revive
+        text: type name will be used as.*Factory.*stutters
+      - linters:
+          - revive
+        path: .*_test\.go
+        text: unused-parameter
+      - linters:
+          - unused
+        path: .*_test\.go
+      - linters:
+          - nestif
+        path: .*_test\.go
+        text: has complex nested blocks
+      - linters:
+          - cyclop
+          - errorlint
+          - lll
+          - maintidx
+          - wrapcheck
+        path: .*_test\.go
+      - linters:
+          - gocritic
+        path: example/.*\.go
+        text: exitAfterDefer
+      - linters:
+          - cyclop
+          - maintidx
+          - wrapcheck
+        path: cmd/.*\.go
+      - linters:
+          - errorlint
+          - wrapcheck
+        path: adapter/.*\.go
+      - linters:
+          - cyclop
+          - maintidx
+          - wrapcheck
+        path: contract/.*\.go
+      - linters:
+          - cyclop
+          - maintidx
+          - wrapcheck
+        path: migration/.*\.go
+      - linters:
+          - cyclop
+          - wrapcheck
+        path: utils/.*\.go
+      - linters:
+          - cyclop
+          - wrapcheck
+        path: seeder/.*\.go
+      - linters:
+          - cyclop
+          - maintidx
+          - wrapcheck
+        path: testing/.*\.go
+      - linters:
+          - forcetypeassert
+        path: (.*_test\.go|adapter/.*)
+      - linters:
+          - reassign
+        path: (config/.*\.go|cmd/.*/main\.go)
+      - linters:
+          - nilnil
+        path: (adapter/.*\.go|contract/.*\.go)
+      - linters:
+          - predeclared
+        path: (.*_test\.go|example/.*)
+      - linters:
+          - gocritic
+        text: hugeParam.*config\.Config.*consider passing it by pointer
+      - linters:
+          - nilnil
+        path: .*_test\.go
+        text: return both a `nil` error and an invalid value
+      - path: (.+)\.go$
+        text: Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*[Pp]rint(f|ln)?|os\.(Un)?Setenv). is not checked
+      - path: (.+)\.go$
+        text: func name will be used as test\.Test.* by other packages, and that stutters; consider calling this
+      - path: (.+)\.go$
+        text: 'G104: Errors unhandled'
+      - linters:
+          - cyclop
+        path: (.+)_test\.go
+      - linters:
+          - predeclared
+        path: error/.*\.go
+    paths:
+      - .*\.pb\.go$
+      - .*_gen\.go$
+      - .*\.generated\.go$
+      - vendor
+      - .git
+      - node_modules
+      - third_party$
+      - builtin$
+      - examples/.*
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+  settings:
+    gofumpt:
+      extra-rules: true
+  exclusions:
+    generated: lax
+    paths:
+      - .*\.pb\.go$
+      - .*_gen\.go$
+      - .*\.generated\.go$
+      - vendor
+      - .git
+      - node_modules
+      - third_party$
+      - builtin$
+      - examples/.*
+      - .*_test\.go
